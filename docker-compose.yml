@@ -1,0 +1,50 @@
+version: "4"
+
+networks:
+  aingstudios:
+
+services:
+  app:
+    container_name: aingstudios-fullstack
+    build:
+      context: .
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    command: npm run dev
+    
+  nginx:
+    container_name: aingstudios-nginx
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+  postgres:
+      image: postgres:latest
+      restart: always
+      ports:
+          - "5432:5432"
+      environment:
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+          - POSTGRES_DB=postgres
+      volumes:
+          - ./postgres-data:/var/lib/postgresql/data
+  # pgadmin:
+  #     image: dpage/pgadmin4
+  #     restart: always
+  #     ports:
+  #         - "5050:80"
+  #     environment:
+  #         - PGADMIN_DEFAULT_EMAIL=9u1G8@example.com
+  #         - PGADMIN_DEFAULT_PASSWORD=admin
+  #     volumes:
+  #         - ./pgadmin-data:/var/lib/pgadmin
+
+volumes:
+    postgres-data:
+    
